@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Balthasar Waylab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: eine Seite mit Wegweiser-Motiv. Gelbe Pfeilschilder wie beim Wanderweg markieren die drei Arbeitsschritte und die Abschnitte. */
+:root {
+  --bg: #F3F6F5;
+  --surface: #FFFFFF;
+  --ink: #12201F;
+  --muted: #4B5A58;
+  --line: #D3DBD9;
+  --accent: #0B5563;
+  --on-accent: #FFFFFF;
+  --sign: #F2C230;
+  --on-sign: #1A1A14;
+  --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1716; --surface: #152221; --ink: #E8EFEE; --muted: #A3B3B0;
+    --line: #2A3C3A; --accent: #6CC4D3; --on-accent: #0E1716; --sign: #F2C230; --on-sign: #1A1A14;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1716; --surface: #152221; --ink: #E8EFEE; --muted: #A3B3B0;
+  --line: #2A3C3A; --accent: #6CC4D3; --on-accent: #0E1716; --sign: #F2C230; --on-sign: #1A1A14;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+a { color: var(--accent); }
+.wrap { max-width: 1040px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.1rem, 6.4vw, 3.5rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.6rem, 4.4vw, 2.2rem); font-weight: 600; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+p { margin: 0; max-width: 65ch; }
+.muted { color: var(--muted); }
+
+/* Kopfzeile */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 18px; border-bottom: 1px solid var(--line); }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.brand span { color: var(--accent); }
+.brand small { display: block; font-family: var(--font-body, inherit); font-weight: 500; font-size: 0.68rem; letter-spacing: 0.04em; color: var(--muted, var(--ink)); margin-top: 1px; }
+nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+nav button { font: inherit; font-size: 0.95rem; background: none; border: 0; padding: 6px 0; color: var(--muted); cursor: pointer; }
+nav button:hover { color: var(--ink); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Wegweiser */
+.sign { display: inline-block; background: var(--sign); color: var(--on-sign); font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 8px 34px 8px 14px; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%); }
+.sign.left { padding: 8px 14px 8px 34px; clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 50%); }
+.post { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding-left: 14px; border-left: 6px solid var(--ink); }
+.post .sign:nth-child(2) { margin-left: 22px; }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; padding-block: 64px 56px; align-items: center; }
+.hero p.lead { font-size: 1.2rem; margin-top: 20px; color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn { font: inherit; font-weight: 600; font-size: 1rem; padding: 13px 22px; border-radius: 6px; border: 2px solid var(--accent); background: var(--accent); color: var(--on-accent); cursor: pointer; text-decoration: none; display: inline-block; }
+.btn.ghost { background: transparent; color: var(--accent); }
+
+section.block { padding-block: 56px; border-top: 1px solid var(--line); }
+.head { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; margin-bottom: 28px; }
+.head p { color: var(--muted); }
+
+.cols3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card .meta { font-size: 0.9rem; color: var(--muted); }
+.card .price { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; margin-top: auto; padding-top: 8px; }
+.card ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 4px; font-size: 0.97rem; }
+.note { margin-top: 18px; font-size: 0.93rem; color: var(--muted); }
+
+/* Wirkungsraster */
+.layers { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; }
+.layer { display: grid; grid-template-columns: 220px minmax(0, 1fr) minmax(0, 1fr); gap: 8px 24px; padding: 20px 22px; border-top: 1px solid var(--line); align-items: start; }
+.layer:first-child { border-top: 0; }
+.layer .lbl { font-family: var(--font-display); font-weight: 600; }
+.layer .lbl small { display: block; font-family: var(--font-body); font-weight: 500; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.75rem; margin-bottom: 2px; }
+.layer .src { color: var(--muted); font-size: 0.95rem; }
+
+/* Vorgehen */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; counter-reset: s; }
+.steps li { counter-increment: s; border-top: 4px solid var(--ink); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.steps li::before { content: "Schritt " counter(s); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.steps p { font-size: 0.95rem; color: var(--muted); }
+
+/* Cases */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 0; list-style: none; }
+.chips li { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font-size: 0.97rem; }
+
+/* Über mich */
+.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 36px; align-items: start; }
+.about .facts { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.97rem; }
+.about .facts li { padding-left: 14px; border-left: 3px solid var(--sign); }
+.about .text { display: flex; flex-direction: column; gap: 14px; }
+
+/* Kontakt */
+form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 760px; }
+form .full { grid-column: 1 / -1; }
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 500; font-size: 0.95rem; min-width: 0; }
+input, select, textarea { font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 11px 12px; width: 100%; }
+textarea { min-height: 130px; resize: vertical; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.out { max-width: 760px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.out textarea { min-height: 200px; }
+
+/* Rechtliches */
+.legal { padding-block: 48px; display: flex; flex-direction: column; gap: 14px; }
+.legal h2 { margin-top: 18px; font-size: 1.3rem; }
+.legal p, .legal li { max-width: 70ch; }
+.draft { background: var(--sign); color: var(--on-sign); padding: 10px 14px; border-radius: 6px; font-weight: 500; font-size: 0.95rem; max-width: 70ch; }
+
+footer { border-top: 1px solid var(--line); padding-block: 28px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 0.93rem; color: var(--muted); }
+footer button { font: inherit; background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 0; margin-right: 16px; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding-block: 40px; gap: 32px; }
+  .cols3 { grid-template-columns: minmax(0, 1fr); }
+  .layer { grid-template-columns: minmax(0, 1fr); }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .about { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  form { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <button class="brand" data-view="home" aria-label="Zur Startseite">Balthasar <span>Waylab</span><small>Mobilität und Beteiligung</small></button>
+    <nav aria-label="Hauptnavigation">
+      <button data-go="angebot">Angebot</button>
+      <button data-go="wirkung">Wirkungsraster</button>
+      <button data-go="vorgehen">Vorgehen</button>
+      <button data-go="cases">Themen</button>
+      <button data-go="ueber">Über mich</button>
+      <button data-go="kontakt">Kontakt</button>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div>
+        <h1>Massnahmen gemeinsam entwickeln, begleiten und auswerten.</h1>
+        <p class="lead">Für Gemeinden, Städte, Areale und Unternehmen. Mit Workshops, vorhandenen Daten und Gesprächen mit Nutzenden und Nicht-Nutzenden.</p>
+        <div class="cta">
+          <button class="btn" data-go="kontakt">Fachgespräch anfragen</button>
+          <button class="btn ghost" data-go="angebot">Pakete ansehen</button>
+        </div>
+      </div>
+      <div class="post" aria-hidden="true">
+        <span class="sign">Entwickeln</span>
+        <span class="sign">Begleiten</span>
+        <span class="sign left">Auswerten</span>
+      </div>
+    </section>
+
+    <section class="block" id="angebot">
+      <div class="head">
+        <span class="sign">Angebot</span>
+        <h2>Drei Pakete, einzeln oder zusammen</h2>
+        <p>Jede Massnahme braucht etwas anderes. Die Pakete lassen sich einzeln buchen oder zu einem Gesamtpaket verbinden.</p>
+      </div>
+      <div class="cols3">
+        <article class="card">
+          <h3>A Beteiligung</h3>
+          <p class="meta">5 Arbeitstage</p>
+          <ul>
+            <li>Zwei Workshops mit Betroffenen und Verwaltung</li>
+            <li>Vor- und Nachbereitung</li>
+            <li>Ergebnisbericht mit Massnahmenvorschlag</li>
+          </ul>
+          <p class="price">ab CHF 5'500</p>
+        </article>
+        <article class="card">
+          <h3>B Wirkungsbegleitung</h3>
+          <p class="meta">8 Arbeitstage</p>
+          <ul>
+            <li>Workshop zur Wirkungslogik</li>
+            <li>Überblick über vorhandene Daten und deren Auswertung</li>
+            <li>Drei bis fünf Interviews</li>
+            <li>Kurzbericht</li>
+          </ul>
+          <p class="price">ab CHF 8'000</p>
+        </article>
+        <article class="card">
+          <h3>C Fokusgruppen</h3>
+          <p class="meta">6 Arbeitstage</p>
+          <ul>
+            <li>Zwei Gruppen vorher mit möglichen Nutzenden</li>
+            <li>Zwei Gruppen nachher mit Nutzenden und Nicht-Nutzenden</li>
+            <li>Auswertung und Bericht</li>
+          </ul>
+          <p class="price">ab CHF 6'500</p>
+        </article>
+      </div>
+      <p class="note">Gesamtpaket A bis C mit 19 Arbeitstagen ab CHF 18'000. Alle Preise exklusive Reisekosten und Raummiete. Ich führe keine Befragungen durch.</p>
+    </section>
+
+    <section class="block" id="wirkung">
+      <div class="head">
+        <span class="sign left">Wirkungsraster</span>
+        <h2>Was sich verändert und für wen</h2>
+        <p>Jede Massnahme wird auf drei Ebenen betrachtet. Pro Ebene wähle ich die Methode, die zur Frage und zu den vorhandenen Daten passt.</p>
+      </div>
+      <div class="layers">
+        <div class="layer">
+          <div class="lbl"><small>Ebene 1</small>Reisen und Emissionen</div>
+          <p>Wie viel und womit wird gefahren, und wer fährt anders als vorher?</p>
+          <p class="src">Zählungen, Ticket- und Fahrtdaten, Parkplatzbelegung</p>
+        </div>
+        <div class="layer">
+          <div class="lbl"><small>Ebene 2</small>Alltag und Zugang</div>
+          <p>Was wird im Alltag einfacher oder schwieriger, und wer kommt besser oder schlechter ans Ziel?</p>
+          <p class="src">Interviews, Fokusgruppen, Erreichbarkeit</p>
+        </div>
+        <div class="layer">
+          <div class="lbl"><small>Ebene 3</small>Akzeptanz, Lernen und Zusammenarbeit</div>
+          <p>Wird die Massnahme getragen, und was lernen die Beteiligten für den nächsten Schritt?</p>
+          <p class="src">Workshops, Rückmeldungen, Protokolle</p>
+        </div>
+      </div>
+      <p class="note">Ich beschreibe, was sich verändert, für wen und was die Daten hergeben. Ich verspreche keinen Nachweis von Ursache und Wirkung.</p>
+    </section>
+
+    <section class="block" id="vorgehen">
+      <div class="head">
+        <span class="sign">Vorgehen</span>
+        <h2>So läuft ein Auftrag ab</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Fachgespräch</h3><p>30 Minuten, unverbindlich und kostenlos. Wir klären Frage, Stand und Daten.</p></li>
+        <li><h3>Offerte</h3><p>Leistung, Aufwand in Tagen, Preis und was nicht enthalten ist.</p></li>
+        <li><h3>Workshops und Daten</h3><p>Gemeinsam mit den Beteiligten entwickeln, begleiten und die vorhandenen Daten sichten.</p></li>
+        <li><h3>Bericht und Übergabe</h3><p>Ergebnisse in einfacher Sprache, mit Empfehlungen für die nächsten Schritte.</p></li>
+      </ol>
+    </section>
+
+    <section class="block" id="cases">
+      <div class="head">
+        <span class="sign left">Themen</span>
+        <h2>Fragen, bei denen ich helfe</h2>
+        <p>Neue Angebote starten oft als Pilot, mit wenig Vorerfahrung und von Beginn an mit Daten. Dann lohnt es sich, Betroffene früh einzubeziehen und die Wirkung von Anfang an mitzudenken.</p>
+      </div>
+      <ul class="chips">
+        <li>Automatisierte On-Demand-Shuttles</li>
+        <li>E-Scooter-Sharing</li>
+        <li>Bike-Sharing</li>
+        <li>Mobilität in Unternehmen</li>
+        <li>Mobilitätshubs in Arealen</li>
+        <li>Öffentlicher Raum, Quartier und Hitzeanpassung</li>
+        <li>Arbeitsorte, Coworking und Telearbeit</li>
+      </ul>
+    </section>
+
+    <section class="block" id="ueber">
+      <div class="head">
+        <span class="sign">Über mich</span>
+        <h2>Noah Balthasar</h2>
+      </div>
+      <div class="about">
+        <ul class="facts">
+          <li>Mobilitätsforscher aus Luzern</li>
+          <li>Dissertation zu Massnahmen in Reallaboren der nachhaltigen Mobilität</li>
+          <li>Methoden: Workshops, Interviews, Fokusgruppen und die Auswertung vorhandener Daten</li>
+        </ul>
+        <div class="text">
+          <p>Ich habe in meiner Forschung untersucht, wie Massnahmen für nachhaltige Mobilität im Alltag wirken. Dabei habe ich Daten, Interviews und Workshops verbunden und gelernt, dass Massnahmen besser angenommen werden, wenn die Betroffenen sie mitgestalten.</p>
+          <p>Mit Balthasar Waylab bringe ich dieses Vorgehen in die Praxis. Ich arbeite allein, direkt und in klaren Paketen.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="kontakt">
+      <div class="head">
+        <span class="sign left">Kontakt</span>
+        <h2>Fachgespräch anfragen</h2>
+        <p>Schreiben Sie kurz, worum es geht. Ich melde mich innert weniger Tage.</p>
+      </div>
+      <form id="contactForm" novalidate>
+        <label>Name<input id="f-name" name="name" autocomplete="name" required></label>
+        <label>Organisation<input id="f-org" name="org" autocomplete="organization"></label>
+        <label>E-Mail<input id="f-mail" name="mail" type="email" autocomplete="email" required></label>
+        <label>Thema
+          <select id="f-topic" name="topic">
+            <option>Beteiligung (Paket A)</option>
+            <option>Wirkungsbegleitung (Paket B)</option>
+            <option>Fokusgruppen (Paket C)</option>
+            <option>Gesamtpaket</option>
+            <option selected>Noch offen</option>
+          </select>
+        </label>
+        <label class="full">Nachricht<textarea id="f-msg" name="msg" required></textarea></label>
+        <div class="hp" aria-hidden="true"><label>Webseite<input id="f-hp" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <div class="full"><button class="btn" type="submit">Anfrage senden</button> <span id="formErr" class="muted" role="status"></span></div>
+      </form>
+      <div id="formOut" class="out" hidden></div>
+    </section>
+  </main>
+
+  <main id="impressum" class="legal" hidden>
+    <div class="draft" id="draftBanner1">Entwurf. Bitte ergänzen und vor der Veröffentlichung rechtlich prüfen lassen.</div>
+    <h1 style="font-size:2rem">Impressum</h1>
+    <p>Balthasar Waylab, Mobilität und Beteiligung<br>Inhaber Noah Balthasar<br><span id="imp-addr"></span></p>
+    <p>E-Mail <span id="imp-mail"></span></p>
+    <h2>Rechtsform</h2>
+    <p>Einzelunternehmen. Ein Eintrag im Handelsregister besteht nicht.</p>
+    <h2>Haftung für Inhalte</h2>
+    <p>Die Inhalte dieser Seite wurden mit Sorgfalt erstellt. Für Richtigkeit, Vollständigkeit und Aktualität übernehme ich keine Gewähr. Preise sind Richtpreise und werden in der Offerte verbindlich festgelegt.</p>
+    <h2>Haftung für Links</h2>
+    <p>Für Inhalte verlinkter Seiten sind allein deren Betreiber verantwortlich.</p>
+    <p><button class="btn ghost" data-view="home">Zurück zur Startseite</button></p>
+  </main>
+
+  <main id="datenschutz" class="legal" hidden>
+    <div class="draft" id="draftBanner2">Entwurf. Bitte ergänzen und vor der Veröffentlichung rechtlich prüfen lassen.</div>
+    <h1 style="font-size:2rem">Datenschutzerklärung</h1>
+    <p>Verantwortlich für die Bearbeitung von Personendaten auf dieser Seite ist Noah Balthasar, Balthasar Waylab (Kontakt siehe Impressum). Grundlage ist das schweizerische Datenschutzgesetz (nDSG).</p>
+    <h2>Welche Daten ich bearbeite</h2>
+    <p>Wenn Sie das Kontaktformular nutzen, bearbeite ich die Angaben, die Sie eingeben. Das sind Name, Organisation, E-Mail-Adresse, Thema und Nachricht. Ich verwende sie nur, um Ihre Anfrage zu beantworten und eine Offerte zu erstellen.</p>
+    <h2>Aufbewahrung</h2>
+    <p>Anfragen ohne Auftrag lösche ich spätestens nach 12 Monaten. Für Aufträge gelten die gesetzlichen Aufbewahrungsfristen.</p>
+    <h2>Weitergabe</h2>
+    <p>Ich gebe Ihre Daten nicht zu Werbezwecken weiter. Technische Dienstleister, zum Beispiel Hosting und Formularversand, bearbeiten Daten in meinem Auftrag. Dienstleister: <span id="ds-host"></span></p>
+    <h2>Cookies und Analyse</h2>
+    <p>Diese Seite setzt keine Cookies und verwendet keine Analysewerkzeuge. Die Schriftarten werden von Google Fonts geladen. Dabei kann Ihre IP-Adresse an Google übertragen werden.</p>
+    <h2>Ihre Rechte</h2>
+    <p>Sie können Auskunft über Ihre Daten verlangen sowie Berichtigung und Löschung beantragen. Schreiben Sie dazu an die Adresse im Impressum. Sie können sich ausserdem an den Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten wenden.</p>
+    <p><button class="btn ghost" data-view="home">Zurück zur Startseite</button></p>
+  </main>
+
+  <footer>
+    <span>© Balthasar Waylab, Luzern</span>
+    <span><button data-view="impressum">Impressum</button><button data-view="datenschutz">Datenschutz</button></span>
+  </footer>
+</div>
+
+<script>
+// Einstellungen. Bitte vor der Veröffentlichung ausfüllen.
+var CONTACT_MAIL = "";        // Geschäftliche E-Mail-Adresse
+var ADDRESS = "";             // Postadresse für das Impressum
+var HOSTING = "GitHub Pages (GitHub Inc., USA)";
+var FORM_ENDPOINT = "";       // Adresse eines Formulardienstes, zum Beispiel von Formspree
+var LEGAL_DRAFT = true;       // false setzen, sobald die Texte geprüft sind
+
+(function () {
+  var views = ["home", "impressum", "datenschutz"];
+  var $ = function (id) { return document.getElementById(id); };
+
+  function show(view, scrollId) {
+    if (views.indexOf(view) < 0) view = "home";
+    views.forEach(function (v) { $(v).hidden = (v !== view); });
+    try {
+      var h = view === "home" ? "" : "#" + view;
+      if (location.hash !== h) history.replaceState(null, "", location.pathname + location.search + h);
+    } catch (e) {}
+    if (scrollId && view === "home") {
+      var el = $(scrollId);
+      if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+    }
+    window.scrollTo(0, 0);
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-view],[data-go]");
+    if (!t) return;
+    if (t.dataset.view) show(t.dataset.view);
+    else show("home", t.dataset.go);
+  });
+  window.addEventListener("hashchange", function () {
+    show(location.hash.replace("#", "") || "home");
+  });
+
+  $("imp-addr").textContent = ADDRESS || "[Postadresse ergänzen]";
+  $("imp-mail").textContent = CONTACT_MAIL || "[E-Mail-Adresse ergänzen]";
+  $("ds-host").textContent = HOSTING;
+  if (!LEGAL_DRAFT) { $("draftBanner1").hidden = true; $("draftBanner2").hidden = true; }
+  show(location.hash.replace("#", "") || "home");
+
+  // Kontaktformular
+  var form = $("contactForm"), out = $("formOut"), err = $("formErr");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    err.textContent = "";
+    if ($("f-hp").value) return;
+    var name = $("f-name").value.trim(), mail = $("f-mail").value.trim(), msg = $("f-msg").value.trim();
+    if (!name || !mail || !msg || mail.indexOf("@") < 1) {
+      err.textContent = "Bitte Name, E-Mail und Nachricht ausfüllen.";
+      return;
+    }
+    var text = "Anfrage über die Webseite\n" +
+      "Name: " + name + "\n" +
+      "Organisation: " + $("f-org").value.trim() + "\n" +
+      "E-Mail: " + mail + "\n" +
+      "Thema: " + $("f-topic").value + "\n\n" + msg;
+
+    function fallback() {
+      out.hidden = false;
+      out.innerHTML = "";
+      var p = document.createElement("p");
+      p.textContent = CONTACT_MAIL
+        ? "Der Versand ist hier nicht möglich. Bitte kopieren Sie den Text und senden Sie ihn an " + CONTACT_MAIL + "."
+        : "Der Versand ist noch nicht eingerichtet. Bitte kopieren Sie den Text und senden Sie ihn per E-Mail an die Adresse im Impressum.";
+      var ta = document.createElement("textarea");
+      ta.id = "f-copy"; ta.readOnly = true; ta.value = text;
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "btn ghost"; b.textContent = "Text kopieren";
+      b.addEventListener("click", function () {
+        function sel() { ta.focus(); ta.select(); b.textContent = "Text markiert, bitte kopieren"; }
+        try { navigator.clipboard.writeText(text).then(function () { b.textContent = "Kopiert"; }, sel); } catch (x) { sel(); }
+      });
+      out.appendChild(p); out.appendChild(ta); out.appendChild(b);
+    }
+
+    if (!FORM_ENDPOINT) { fallback(); return; }
+    fetch(FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ name: name, organisation: $("f-org").value.trim(), email: mail, thema: $("f-topic").value, nachricht: msg }) })
+      .then(function (r) {
+        if (!r.ok) throw new Error("http");
+        out.hidden = false; out.textContent = "Danke. Ihre Anfrage ist angekommen. Ich melde mich innert weniger Tage.";
+        form.reset();
+      })
+      .catch(fallback);
+  });
+})();
+</script>
+</html>
